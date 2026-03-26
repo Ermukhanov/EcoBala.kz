@@ -1338,6 +1338,20 @@ function renderBadgesFromDB(earned) {
 
 // ─── SUPABASE ИНТЕГРАЦИЯ ───────────────────────────────────────────────────────
 let cu = null;
+function createTeenGuestUser() {
+  return {
+    id: 'guest-teen',
+    role: 'teen',
+    nickname: 'EcoBala Teen',
+    full_name: 'EcoBala Teen',
+    avatar: '🌍',
+    points: 240,
+    level: 3,
+    badges: ['first', 'explorer'],
+    quests_done: 2,
+    profile_state: { streakDays: 1, selectedBanner: 'meadow', selectedNickColor: 'emerald', selectedFrame: 'leaf', selectedAura: '' }
+  };
+}
 
 // Logout
 
@@ -1486,16 +1500,15 @@ async function initTeen() {
     } else if (cu && cu.role === 'teen') {
       console.warn('Using cached teen user because fresh session is missing');
     } else {
-      localStorage.removeItem('ecobala-user-cache');
-      location.href = 'index.html';
-      return;
+      cu = createTeenGuestUser();
+      console.warn('Opening teen page in guest mode');
     }
   } catch(e) {
     if (cu && cu.role === 'teen') {
       console.warn('Using cached user due to network error');
     } else {
-      location.href = 'index.html';
-      return;
+      cu = createTeenGuestUser();
+      console.warn('Opening teen page in guest mode after init error');
     }
   }
 
