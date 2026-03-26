@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -1896,12 +1896,15 @@ async function init() {
     }
     // Always verify with real session
     const fresh = await EcoBalaAuth.getCurrentUser();
-    if (!fresh || fresh.role !== 'kids') {
+    if (fresh && fresh.role === 'kids') {
+      cu = fresh;
+    } else if (cu && cu.role === 'kids') {
+      console.warn('Using cached kids user because fresh session is missing');
+    } else {
       localStorage.removeItem('ecobala-user-cache');
       location.href = 'index.html';
       return;
     }
-    cu = fresh;
   } catch(e) {
     // If network error but we have valid cache, stay on page
     if (cu && cu.role === 'kids') {
